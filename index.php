@@ -3,14 +3,26 @@
     require_once __DIR__ . '/Models/Toy.php';
     require_once __DIR__ . '/Models/Gadget.php';
 
-    try{
         $food=new Food('croccantini','felix','€5','#','cat');
         $food->setIngredients('pollo','tacchino');
         $toy=new Toy('pallina','aaa','€14','#','dog');
-        var_dump($food);
-    }catch(Exception $error){
-        echo $error->getMessage();
-    }
+        $prodotti=[];
+        $prodotti=[...$prodotti,...[$food]];
+        $prodotti=[...$prodotti,...[$toy]];
+        $filter=$prodotti;
+        $has_animal=!empty($_GET['animal']);
+        $animal=$_GET['animal'];
+
+        if($has_animal){
+            $animals=[];
+            foreach($filter as $product){
+                if($product->getAnimal()==$animal){
+                    $animals[]=$product;
+                    
+                }
+            }
+            $filter=$animals;
+        }
 
 ?>
 
@@ -27,27 +39,42 @@
     <body>
         <div class="container">
             <div class="row">
-                <div>
-                    <div><?php echo $food->getName() ?></div>
-                    <div><?php echo $food->getBrand() ?></div>
-                    <div><?php echo $food->getPrice() ?></div>
-                    <div><?php echo $food->getImg() ?></div>
-                    <div><?php if ($food->getAnimal() =='cat'):?><i class="fa-solid fa-cat"></i>
-                        <?php elseif ($food->getAnimal() =='dog'):?><i class="fa-solid fa-dog"></i>
-                        <?php endif; ?>
-                    </div>
+                <div class="col-12">
+                    <h2>Filter</h2>
+                    <form action="index.php" method="GET" class="row align-items-center">
+                        <div class="col-auto">
+                            <select class="form-select" aria-label="Default select example" name="animal">
+                                <option selected value="">animale</option>
+                                <option value="dog">cane</option>
+                                <option value="cat">gatto</option>
+                            </select>
+                        </div>
+                        <div class="col-auto">
+                            <select class="form-select" aria-label="Default select example" name="type">
+                                <option selected value="">tipologia</option>
+                                <option value="cibo">cibo</option>
+                                <option value="giochi">giochi</option>
+                                <option value="gadget">gadget</option>
+                            </select>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-primary">cerca</button>
+                        </div>
+                    </form>
                 </div>
-                <div>
-                    <div><?php echo $toy->getName() ?></div>
-                    <div><?php echo $toy->getBrand() ?></div>
-                    <div><?php echo $toy->getPrice() ?></div>
-                    <div><?php echo $toy->getImg() ?></div>
-                    <div>
-                        <?php if ($toy->getAnimal() =='cat'):?><i class="fa-solid fa-cat"></i>
-                        <?php elseif ($toy->getAnimal() =='dog'):?><i class="fa-solid fa-dog"></i>
-                        <?php endif; ?>
-                    </div>
-                </div>
+                <?php foreach($filter as $prodocts) :?>
+                        <div class="col fs-4 fw-semibold">
+                            <div><?php echo $prodocts->getName(); ?></div>
+                            <div><?php echo $prodocts->getBrand(); ?></div>
+                            <div><?php echo $prodocts->getPrice(); ?></div>
+                            <div><?php echo $prodocts->getImg(); ?></div>
+                            <?php if($prodocts->getAnimal()==='cat'): ?>
+                                <div><i class="fa-solid fa-cat"></i></div>
+                            <?php elseif($prodocts->getAnimal()==='dog'): ?>
+                                <div><i class="fa-solid fa-dog"></i></div>
+                            <?php endif; ?>
+                        </div>
+                <?php endforeach; ?>
             </div>
         </div>
     </body>

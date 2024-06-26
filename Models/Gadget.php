@@ -3,10 +3,10 @@ require_once __DIR__ . '/Traits/Product.php';
 
 class Gadget{
     use Product;
-    private string $category='gadget';
+    private string $type='gadget';
     
-    public function getCategory(){
-        return $this->category;
+    public function getType(){
+        return $this->type;
     }
 }
 
